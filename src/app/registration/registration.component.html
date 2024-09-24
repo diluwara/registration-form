@@ -1,0 +1,48 @@
+<div>
+  <h2>Register</h2>
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <label for="username">Username</label>
+    <input
+      id="username"
+      formControlName="username"
+      placeholder="Username"
+    />
+    <div *ngIf="registrationForm.get('username')?.invalid && registrationForm.get('username')?.touched">
+      <small class="error-message" *ngIf="registrationForm.get('username')?.hasError('required')">
+        Username is required.
+      </small>
+      <small class="error-message" *ngIf="registrationForm.get('username')?.hasError('pattern')">
+        Only lowercase letters and numbers allowed.
+      </small>
+      <small class="error-message" *ngIf="registrationForm.get('username')?.hasError('maxlength')">
+        Username must be less than 20 characters.
+      </small>
+    </div>
+    <div *ngIf="usernameTaken">
+      <small class="error-message">Username is not available.</small>
+    </div>
+
+    <label for="country">Country</label>
+    <select id="country" formControlName="country">
+      <option value="">Select your country</option>
+      <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+    </select>
+    <div *ngIf="registrationForm.get('country')?.invalid && registrationForm.get('country')?.touched">
+      <small class="error-message">Country is required.</small>
+    </div>
+
+    <button type="submit" [disabled]="registrationForm.invalid || usernameTaken">Submit</button>
+    <button type="button" (click)="resetLocalStorage()" class="reset-btn">Reset Local Storage</button>
+
+    <div *ngIf="registrationSuccessful">
+      <small class="success-message">User registered successfully</small>
+    </div>
+  </form>
+
+  <h2>Registered Users</h2>
+  <ul>
+    <li *ngFor="let user of users">
+      {{ user.username }} - {{ user.country }}
+    </li>
+  </ul>
+</div>
